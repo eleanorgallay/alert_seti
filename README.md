@@ -5,59 +5,102 @@
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - We access the ZTF alert packet through the Lasair API.
 - r_X2: Chi-Square statistic for historical r-band data.
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - We access the ZTF alert packet through the Lasair API.
 - i_X2: Chi-Square statistic for historical i-band data.
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - We access the ZTF alert packet through the Lasair API.
 - g_5-95_X2: Chi-Square statistic for 5th to 95th percentile range of historical g-band data.
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - We access the ZTF alert packet through the Lasair API.
 - r_5-95_X2: Chi-Square statistic for 5th to 95th percentile range of historical r-band data.
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - We access the ZTF alert packet through the Lasair API.
 - i_5-95_X2: Chi-Square statistic for 5th to 95th percentile range of historical i-band data.
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - We access the ZTF alert packet through the Lasair API.
 - g_KSpvalue: P-value from 2-sample K-S test comparing the distributions of historical and alert g-band data.
    - Historical data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
    - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair.
+   - We access the ZTF alert packet through the Lasair API.
 - r_KSpvalue: P-value from 2-sample K-S test comparing the distributions of historical and alert r-band data.
    - Historical data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
-   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair. 
+   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair.
+   - We access the ZTF alert packet through the Lasair API.
 - i_KSpvalue: P-value from 2-sample K-S test comparing the distributions of historical and alert i-band data.
    - Historical data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
-   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair. 
-- g_depth
-- r_depth
-- i_depth
-- nhist
-- g_nhist
-- r_nhist
-- i_nhist
-- nalert
-- g_nalert
-- r_nalert
-- i_nalert 
-- ramean
-- decmean
-- gaiara
-- gaiadec
-- g_med
-- r_med
-- i_med
+   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair.
+   - We access the ZTF alert packet through the Lasair API.
+- g_depth: Difference between median alert g-band magnitude and median historical g-band magnitude (alert - historical).
+   - Historical data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair.
+   - We access the ZTF alert packet through the Lasair API.
+- r_depth: Difference between median alert r-band magnitude and median historical r-band magnitude (alert - historical).
+   - Historical data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair.
+   - We access the ZTF alert packet through the Lasair API.
+- i_depth: Difference between median alert i-band magnitude and median historical i-band magnitude (alert - historical).
+   - Historical data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair.
+   - We access the ZTF alert packet through the Lasair API.
+- nhist: Number of data points in ZTF archival light curve.
+- nhist100: Number of data points in ZTF archival light curve and at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+- g_nhist: Number of g-band data points in ZTF archival light curve.
+- r_nhist: Number of r-band data points in ZTF archival light curve.
+- i_nhist: Number of i-band data points in ZTF archival light curve.
+- nalert: Number of data points in ZTF alert packet.
+   - We access the ZTF alert packet through the Lasair API.
+- g_nalert: Number of g-band data points in ZTF alert packet.
+- r_nalert: Number of r-band data points in ZTF alert packet.
+- i_nalert: Number of i-band data points in ZTF alert packet. 
+- ramean: Mean right ascension in degrees, from Lasair Schema. 
+- decmean: Mean declination in degrees, from Lasair Schema.
+- gaiara: Right Ascension in degrees of closest Gaia match.
+   - Gaia match based on 1-arc second cone search around the source's mean RA and Dec from Lasair.
+- gaiadec: Declination in degrees of closest Gaia match.
+   - Gaia match based on 1-arc second cone search around the source's mean RA and Dec from Lasair.
+- gaial: Galactic longitude in degrees of closest Gaia match.
+   - Gaia match based on 1-arc second cone search around the source's mean RA and Dec from Lasair.
+- gaiab: Galactic latitude in degrees of closest Gaia match.
+   - Gaia match based on 1-arc second cone search around the source's mean RA and Dec from Lasair.
+- g_med: Median magnitude of historical g-band data.
+   - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+- r_med: Median magnitude of historical r-band data.
+   - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+- i_med: Median magnitude of historical i-band data.
+   - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
 - disc_mjd
 - latest_mjd
 - gaia_sourceid 
@@ -65,4 +108,5 @@
 - gaia_plx
 - gaia_abs_gmag
 - gaia_BP-RP
+- mjdnow
 - num
