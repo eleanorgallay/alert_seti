@@ -3,22 +3,43 @@
    - Takes the form ZTFyyxxxxxxx.
 - g_X2: Chi-Square statistic for historical g-band data.
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
-    We define the start of an alert epoch by the object's discovery date on Lasair.
-    This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
 - r_X2: Chi-Square statistic for historical r-band data.
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
-    We define the start of an alert epoch by the object's discovery date on Lasair.
-    This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
 - i_X2: Chi-Square statistic for historical i-band data.
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
-    We define the start of an alert epoch by the object's discovery date on Lasair.
-    This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
-- g_5-95_X2
-- r_5-95_X2
-- i_5-95_X2
-- g_KSpvalue
-- r_KSpvalue
-- i_KSpvalue 
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+- g_5-95_X2: Chi-Square statistic for 5th to 95th percentile range of historical g-band data.
+   - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+- r_5-95_X2: Chi-Square statistic for 5th to 95th percentile range of historical r-band data.
+   - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+- i_5-95_X2: Chi-Square statistic for 5th to 95th percentile range of historical i-band data.
+   - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+- g_KSpvalue: P-value from 2-sample K-S test comparing the distributions of historical and alert g-band data.
+   - Historical data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair.
+- r_KSpvalue: P-value from 2-sample K-S test comparing the distributions of historical and alert r-band data.
+   - Historical data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair. 
+- i_KSpvalue: P-value from 2-sample K-S test comparing the distributions of historical and alert i-band data.
+   - Historical data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
+   - We define the start of an alert epoch by the object's discovery date on Lasair.
+   - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
+   - Alert data is pulled from the ZTF alert packet and must be at least 30 days after the object's discovery date on Lasair. 
 - g_depth
 - r_depth
 - i_depth
