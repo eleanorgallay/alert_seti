@@ -385,9 +385,9 @@ for obj in Dips:
         cand_coord = SkyCoord(ra=obj['objectData']['ramean'], dec=obj['objectData']['decmean'], unit=(u.degree, u.degree), frame='icrs')
         cand_search = Gaia.cone_search_async(cand_coord, radius=u.Quantity(1.0, u.arcsec))
         cand_match = cand_search.get_data()
-        cand_plx = float(cand_match['parallax']) # in milliarcseconds
-        cand_bp_rp= float(cand_match['bp_rp']) # BP - RP color in magnitudes
-        cand_g_appmag = float(cand_match['phot_g_mean_mag']) # apparent g-bang magnitude
+        cand_plx = float(cand_match['parallax'][0]) # in milliarcseconds
+        cand_bp_rp= float(cand_match['bp_rp'][0]) # BP - RP color in magnitudes
+        cand_g_appmag = float(cand_match['phot_g_mean_mag'][0]) # apparent g-bang magnitude
         cand_GMAG = cand_g_appmag - 5*np.log10(1000/cand_plx) + 5 # calculating absolute magnitude
         
         cand_color.append(cand_bp_rp)
@@ -535,9 +535,9 @@ for obj in Dips:
         trash_coord = SkyCoord(ra=obj['objectData']['ramean'], dec=obj['objectData']['decmean'], unit=(u.degree, u.degree), frame='icrs')
         trash_search = Gaia.cone_search_async(trash_coord, radius=u.Quantity(1.0, u.arcsec))
         trash_match = trash_search.get_data()
-        trash_plx = float(trash_match['parallax']) # in milliarcseconds
-        trash_bp_rp= float(trash_match['bp_rp']) # BP - RP color in magnitudes
-        trash_g_appmag = float(trash_match['phot_g_mean_mag']) # apparent g-bang magnitude
+        trash_plx = float(trash_match['parallax'][0]) # in milliarcseconds
+        trash_bp_rp= float(trash_match['bp_rp'][0]) # BP - RP color in magnitudes
+        trash_g_appmag = float(trash_match['phot_g_mean_mag'][0]) # apparent g-bang magnitude
         trash_GMAG = trash_g_appmag - 5*np.log10(1000/trash_plx) + 5 # calculating absolute magnitude
         
         trash_color.append(trash_bp_rp)
@@ -553,9 +553,9 @@ CMD = path + '/CMDs/CMD_' + mjdnow + '.pdf'
 plt.figure(figsize=(10, 8))
 plt.hist2d(color, gaia_GMAG, bins=[300,300], cmap='binary', alpha = 0.7, range=[[-1, 5.5], [-2, 20]])
 
-plt.plot(trash_color, trash_gmag, 'd', color = 'white', markeredgecolor = 'indigo', zorder= 10, markersize= 7, label = 'Stars that passed Lasair filter')
-plt.plot(cand_color, cand_gmag, '*', color = 'white', markeredgecolor = 'crimson', zorder= 11, markersize = 15, label = 'Stars that passed filter + statistical tests')
-plt.legend(loc='upper right')
+plt.plot(trash_color, trash_gmag, 's', color = 'steelblue',  zorder= 10, markersize= 5, label = 'Stars that passed Lasair filter')
+plt.plot(cand_color, cand_gmag, '^', color = 'brown', zorder= 11, markersize = 6, label = 'Stars that passed filter + statistical tests')
+plt.legend(loc='lower right')
 plt.colorbar(label='Density')
 plt.xlabel('BP-RP Color (Magnitudes)')
 plt.ylabel('Absolute G Magnitude')
