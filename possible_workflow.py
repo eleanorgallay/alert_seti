@@ -24,21 +24,20 @@ import astropy.units as u
 from astropy.coordinates import SkyCoord
 from astroquery.gaia import Gaia
 import glob
+from matplotlib.colors import LogNorm
 
 
-
-# Defining paths and creating directories
+# Setting up paths, directories
 
 path = os.getcwd()
 
-directories = ['Lightcurves', 'CMDs', 'AlertStats']
+directories = ['Lightcurves', 'CMDs', 'Database']
 for directory in directories:         # create output directories if not present
     if not os.path.exists(directory):
         os.makedirs(directory)
 
 
-
-# Defining Functions
+# Functions
 
 
 def diff_to_app_mag(ref_mag, alert_mag, sign): 
@@ -69,7 +68,6 @@ def diff_to_app_mag(ref_mag, alert_mag, sign):
         app_mag = ((-2.5)*log((10**((-.4)*ref_mag)) - (10**((-.4)*alert_mag)),10)) 
     
     return float(app_mag)
-
 
 
 
@@ -125,7 +123,6 @@ def app_mag_err_prop(ref_mag, alert_mag, sign, ref_err, alert_err):
 
 # Query for Disappearing Stars
 
-
 mjdnow = str(Time.now().mjd)
 jdnow = str(Time.now().jd)
 days = str(1) # number of days 
@@ -165,6 +162,7 @@ print('Query returned ' + str(len(v4)) + ' candidates in the past '+ days + ' da
 
 # Pulling info from Gaia catalog of nearby stars
 
+
 #reading csv file
 df = pd.read_csv(path + '/gaia.tsv',comment="#",delimiter=";")
 
@@ -177,26 +175,38 @@ BP = pd.to_numeric(gaia['BPmag'], errors='coerce') #BP magnitude
 RP = pd.to_numeric(gaia['RPmag'], errors='coerce') #RP magnitude
 color = BP - RP #BP-RP color
 gaia_gmag = pd.to_numeric(gaia['Gmag'], errors='coerce') #apparent g magnitudes
-plx = pd.to_numeric(gaia['Plx'], errors= 'coerce')/1000 #parallax in arcsec
-d = 1/plx #distance in parsecs
-gaia_GMAG = gaia_gmag - 5*(np.log10(d/10)) #absolute g magnitudes using distance modulus and parallax
+plx = pd.to_numeric(gaia['Plx'], errors= 'coerce') #parallax in mas
+gaia_GMAG = gaia_gmag - 5*np.log10(1000/plx) + 5 #absolute g magnitudes using distance modulus and parallax
 
 
-#Pulling latest csv file 
+# Reading in database or creating database if it doesn't already exist
 
 
 # List all files in the directory
-CSVs = glob.glob(path + '/AlertStats/*')
+files = glob.glob(path + '/Database/*')
 
-# Sort files lexicographically
-CSVs.sort()
 
-# Get the lexicographically greatest file
-latest_CSV = CSVs[-1] if len(CSVs) > 0 else None
+headers = ["Object", "g_X2", "r_X2", "i_X2", "g_5-95_X2", "r_5-95_X2", "i_5-95_X2", "g_KSpvalue", "r_KSpvalue", "i_KSpvalue", 
+           "g_depth", "r_depth", "i_depth", "nhist", "nhist100", "g_nhist", "r_nhist", "i_nhist", "nalert", "g_nalert", "r_nalert", "i_nalert", 
+           "ramean", "decmean", "gaiara", "gaiadec", "gaial", "gaiab", "g_med", "r_med", "i_med", "disc_mjd", "latest_mjd", "gaia_sourceid", 
+           "gaia_app_gmag", "gaia_plx", "gaia_abs_gmag", "gaia_BP-RP", "mjdnow", "num"]
 
-# read the file if it exists
-if latest_CSV:
-    latest_stats = pd.read_csv(latest_CSV, delimiter=",")
+units = ["", "", "", "", "", "", "", "", "", "", 
+           "mag", "mag", "mag", "", "", "", "", "", "", "", "", "", 
+           "deg", "deg", "deg", "deg", "deg", "deg", "mag", "mag", "mag", "", "", "", 
+           "mag", "mas", "mag", "mag", "", ""]  
+
+# read the file if it exists, create file if not
+if len(files) > 0:
+    Database = files[0]
+    stats = pd.read_csv(Database, delimiter=",")
+else: 
+    Database = path+ '/Database/Database.csv'
+    with open(Database, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(headers)
+        writer.writerow(units)
+    
 
 
 # Plotting Light Curves from Alert Packet and ZTF archive 
@@ -213,24 +223,6 @@ trash_color = []
 cand_gmag = []
 trash_gmag = []
 
-broker = path+ '/AlertStats/stats_' + mjdnow+ '.csv'
-
-headers = ["Object", "g_X2", "r_X2", "i_X2", "g_5-95_X2", "r_5-95_X2", "i_5-95_X2", "g_KSpvalue", "r_KSpvalue", "i_KSpvalue", 
-           "g_depth", "r_depth", "i_depth", "nhist", "g_nhist", "r_nhist", "i_nhist", "nalert", "g_nalert", "r_nalert", "i_nalert", 
-           "ramean", "decmean", "gaiara", "gaiadec", "g_med", "r_med", "i_med", "disc_mjd", "latest_mjd", "gaia_sourceid", 
-           "gaia_app_gmag", "gaia_plx", "gaia_abs_gmag", "gaia_BP-RP", "num"]
-
-units = ["", "", "", "", "", "", "", "", "", "", 
-           "mag", "mag", "mag", "", "", "", "", "", "", "", "", 
-           "deg", "deg", "deg", "deg", "mag", "mag", "mag", "", "", "", 
-           "mag", "mas", "mag", "mag", ""]   
-    
-    
-with open(broker, 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(headers)
-    writer.writerow(units)
-    
 
 for obj in Dips:
     try:
@@ -259,6 +251,8 @@ for obj in Dips:
     ztf_rmjd = np.array(ztf.data['mjd'][ztf.data['filtercode'] == 'zr'][ztf.data['mjd'] < obj['objectData']['discMjd']][ztf.data['magerr'] > 0])
     ztf_imjd = np.array(ztf.data['mjd'][ztf.data['filtercode'] == 'zi'][ztf.data['mjd'] < obj['objectData']['discMjd']][ztf.data['magerr'] > 0])
     
+    hist100 = []
+    
     # calculating 5th - 95th percentile ranges for historic data 
     if len(ztf_gsamp) > 0:
         variables['ghist'] = ztf_gsamp[(obj['objectData']['discMjd'] - ztf_gmjd) > 100] # restricting data to 100 days before discovery date
@@ -267,6 +261,7 @@ for obj in Dips:
         variables['g_p95'] = np.percentile(variables['ghist'], 95)
         variables['g_5to95'] = variables['ghist'][(variables['ghist'] > variables['g_p5']) & (variables['ghist'] < variables['g_p95'])]
         variables['gerr_5to95'] = variables['ghisterr'][(variables['ghist'] > variables['g_p5']) & (variables['ghist'] < variables['g_p95'])]
+        hist100.append(variables['ghist'])
     
     if len(ztf_rsamp) > 0:
         variables['rhist'] = ztf_rsamp[(obj['objectData']['discMjd'] - ztf_rmjd) > 100] # restricting data to 100 days before discovery date
@@ -275,7 +270,8 @@ for obj in Dips:
         variables['r_p95'] = np.percentile(variables['rhist'], 95)
         variables['r_5to95'] = variables['rhist'][(variables['rhist'] > variables['r_p5']) & (variables['rhist'] < variables['r_p95'])]
         variables['rerr_5to95'] = variables['rhisterr'][(variables['rhist'] > variables['r_p5']) & (variables['rhist'] < variables['r_p95'])]
-    
+        hist100.append(variables['rhist'])
+        
     if len(ztf_isamp) > 0:
         variables['ihist'] = ztf_isamp[(obj['objectData']['discMjd'] - ztf_imjd) > 100] # restricting data to 100 days before discovery date
         variables['ihisterr'] = ztf_ierr[(obj['objectData']['discMjd'] - ztf_imjd) > 100]
@@ -283,7 +279,8 @@ for obj in Dips:
         variables['i_p95'] = np.percentile(variables['ihist'], 95)
         variables['i_5to95'] = variables['ihist'][(variables['ihist'] > variables['i_p5']) & (variables['ihist'] < variables['i_p95'])]
         variables['ierr_5to95'] = variables['ihisterr'][(variables['ihist'] > variables['i_p5']) & (variables['ihist'] < variables['i_p95'])]
-    
+        hist100.append(variables['ihist'])
+        
     # Creating empty lists for each ZTF filter-band to be filled with apparent magnitudes and errors from alert packet
     gmag = []
     rmag = []
@@ -393,11 +390,8 @@ for obj in Dips:
         cand_color.append(cand_bp_rp)
         cand_gmag.append(cand_GMAG)
         
-        
-        if latest_CSV:
-            if (latest_stats['Object'] == obj['objectId']).any():
-                variables['num'] = float(latest_stats['num'][latest_stats['Object'] == 'ZTF24aandanb']) + 1
-            else: variables['num'] = 1
+        if len(files) > 0:
+            variables['num'] = len(stats['Object'][stats['Object'] == obj['objectId']]) + 1
         else:
             variables['num'] = 1
         
@@ -417,6 +411,7 @@ for obj in Dips:
             "r_depth": variables.get('r_depth', np.nan),
             "i_depth": variables.get('i_depth', np.nan),
             "nhist": len(ztf.data['mag']),
+            "nhist100": len(hist100),
             "g_nhist": len(ztf_gsamp),
             "r_nhist": len(ztf_rsamp),
             "i_nhist": len(ztf_isamp),
@@ -428,6 +423,8 @@ for obj in Dips:
             "decmean": obj['objectData']['decmean'],
             "gaiara": float(cand_match['ra']),
             "gaiadec": float(cand_match['dec']),
+            "gaial": float(cand_match['l']),
+            "gaiab": float(cand_match['b']),
             "g_med": variables.get('g_med', np.nan),
             "r_med": variables.get('r_med', np.nan),
             "i_med": variables.get('i_med', np.nan),
@@ -438,12 +435,13 @@ for obj in Dips:
             "gaia_plx": cand_plx, 
             "gaia_abs_gmag": cand_GMAG,
             "gaia_BP-RP": cand_bp_rp,
+            "mjdnow": mjdnow,
             "num": variables['num']
             
             
         }
 
-        with open(broker, 'a', newline='') as file:
+        with open(Database, 'a', newline='') as file:
             writer = csv.DictWriter(file, fieldnames=headers)
             writer.writerow(statistics)            
              
@@ -455,8 +453,6 @@ for obj in Dips:
         
         plt.figure(figsize = (15, 5))
         plt.subplot(111)
-        
-        
         
         ga = plt.errorbar(gmjd, gmag, yerr = gerr, fmt = '.', color= 'mediumblue', label = 'g (alert)')
         ra = plt.errorbar(rmjd, rmag, yerr = rerr, fmt = '.', color= 'crimson', label = 'r (alert)')
@@ -551,11 +547,11 @@ print(str(len(candidates)) + ' candidates remain')
 CMD = path + '/CMDs/CMD_' + mjdnow + '.pdf'
 
 plt.figure(figsize=(10, 8))
-plt.hist2d(color, gaia_GMAG, bins=[300,300], cmap='binary', alpha = 0.7, range=[[-1, 5.5], [-2, 20]])
+plt.hist2d(color, gaia_GMAG, bins=[300,300], cmap='binary', alpha = 0.7, range=[[-1, 5.5], [-4, 18]], norm = LogNorm())
 
-plt.plot(trash_color, trash_gmag, 's', color = 'steelblue',  zorder= 10, markersize= 5, label = 'Stars that passed Lasair filter')
-plt.plot(cand_color, cand_gmag, '^', color = 'brown', zorder= 11, markersize = 6, label = 'Stars that passed filter + statistical tests')
-plt.legend(loc='lower right')
+plt.plot(trash_color, trash_gmag, 's', color = 'plum',  zorder= 10, markersize= 4, alpha= 0.8, label = 'Stars that passed Lasair filter')
+plt.plot(cand_color, cand_gmag, '*', color = 'brown', zorder= 11, markersize = 11, alpha= 0.7, label = 'Stars that passed filter + statistical tests')
+plt.legend(loc= 'upper left')
 plt.colorbar(label='Density')
 plt.xlabel('BP-RP Color (Magnitudes)')
 plt.ylabel('Absolute G Magnitude')
@@ -591,4 +587,3 @@ plt.show()
 # - Object's median alert magnitude is greater/fainter than the 95th percentile magnitude of the historic data in every filter
 # 
 # Note: K-S and chi square tests are calculated on historic data from over 100 days before the alert epoch and alert data from at least 30 days after the discovery date in Lasair
-
