@@ -1,4 +1,4 @@
-### Schema
+### Database Schema
 - Object: Object ID from Lasair Broker.
    - Takes the form ZTFyyxxxxxxx.
 - g_X2: Chi-Square statistic for historical g-band data.
@@ -101,12 +101,24 @@
    - This data is pulled from the ZTF archive and must be at least 100 days older than the object's alert epoch.
    - We define the start of an alert epoch by the object's discovery date on Lasair.
    - This date marks the first point in the ZTF alert packet, 30 days before the first data point that flagged an alert.
-- disc_mjd
-- latest_mjd
-- gaia_sourceid 
-- gaia_app_gmag
-- gaia_plx
-- gaia_abs_gmag
-- gaia_BP-RP
-- mjdnow
-- num
+- disc_mjd: Date of the first data point in the object's ZTF alert packet.
+   - This marks 30 days before the first data point that flagged an alert.
+   - This date can be found in the alert packet.  
+- latest_mjd: 30 days before the most recent data point that flagged an alert.
+   - This date comes from the "jdmin" given in the alert packet. 
+- gaia_sourceid: Source ID of closest Gaia match.
+   - Gaia match based on 1-arc second cone search around the source's mean RA and Dec from Lasair.
+- gaia_app_gmag: Apparent g-band magnitude of closest Gaia match.
+   - Gaia match based on 1-arc second cone search around the source's mean RA and Dec from Lasair.
+- gaia_plx: Parallax in milliarcseconds of closest Gaia match.
+   - Gaia match based on 1-arc second cone search around the source's mean RA and Dec from Lasair.
+- gaia_abs_gmag: Absolute g-band magnitude of closest Gaia match.
+   - Gaia match based on 1-arc second cone search around the source's mean RA and Dec from Lasair.
+   - Calculated using parallax and apparent g-band magnitude of closest Gaia match.
+- gaia_BP-RP: BP-RP color of closest Gaia match.
+  - Gaia match based on 1-arc second cone search around the source's mean RA and Dec from Lasair.
+- mjdnow: Date the object was added to our database (rounded to the nearest integer).
+  - This is the day the script was run.
+- num: Number of times the object has appeared in the database so far.
+  - Tracks how many times a single object has triggered an alert and passed all of our filter constraints.
+  - e.g. a 2 would indicate this is the second time the object has been entered into our database.
